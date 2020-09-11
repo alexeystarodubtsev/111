@@ -44,3 +44,29 @@ code {
     transform: rotate(1800deg);
   }
 }
+.newMessage{
+  display : flex; 
+  align-items:  center;
+  margin-top : 30px
+}
+#InputMess
+{
+  width: 380px;
+  margin-left: 20px;
+  
+}
+@media  (max-device-width: 480px) {
+  #InputMess {
+      width: 180px;
+      margin-left: 2px;
+  }
+  #BtnSend
+  {
+    font-size : x-small;
+  }
+  .attach {
+    width: 20px;
+    margin-left: -10px;
+    margin-right: - 10px;
+  }
+}

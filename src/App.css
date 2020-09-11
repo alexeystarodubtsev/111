@@ -27,6 +27,45 @@
 .App-link {
   color: #61dafb;
 }
+.attach {
+  
+  background:url(./images/attach.png) left top; 
+  width:25px; 
+  height:25px;
+  display: block;
+  float: left;
+}
+#attachImg {
+  margin-left: 400px;
+  max-height : 150px;
+  width : auto;
+  max-width: 150px;
+  
+}
+
+#closeAttach {
+  height: 25px;
+  margin-left: -18px;
+  margin-top: -5px;
+  background: gray;
+  border-radius: 50%;
+  color: #fff;
+  border: none;
+}
+@media  (max-device-width: 480px) {
+  
+  #attachImg {
+    margin-left: 190px;
+
+  }
+  #closeAttach {
+    height: 40px;
+    margin-left: -25px;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
 
 @keyframes App-logo-spin {
   from {
@@ -35,4 +74,5 @@
   to {
     transform: rotate(360deg);
   }
+  
 }

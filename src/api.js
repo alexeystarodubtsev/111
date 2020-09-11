@@ -1,8 +1,7 @@
 import openSocket from 'socket.io-client';
 import PropTypes from 'prop-types';
 
-
-const  socket = openSocket('http://localhost:8000');
+const  socket = openSocket('http://31.216.165.10:8000');
 
 
 function subscribe(name,cb) {
@@ -13,10 +12,15 @@ function subscribe(name,cb) {
 function SendMessage(message)
 {
   socket.emit('Send', message);
+  
 }
 
 subscribe.propTypes = {
   cb: PropTypes.func.isRequired
 }
+function closeConnection () {
+  socket.emit('close');
+  socket.close();
+}
 
-export { subscribe, SendMessage };
+export { subscribe, SendMessage, closeConnection };
