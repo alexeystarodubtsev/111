@@ -43,7 +43,7 @@
   
 }
 
-#closeAttach {
+.closeAttach {
   height: 25px;
   margin-left: -18px;
   margin-top: -5px;
@@ -58,7 +58,7 @@
     margin-left: 190px;
 
   }
-  #closeAttach {
+  .closeAttach {
     height: 40px;
     margin-left: -25px;
     justify-content: center;

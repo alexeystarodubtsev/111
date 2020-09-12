@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import "bootstrap/dist/css/bootstrap.css"
 import Loader from './Loader'
 import  { subscribe, SendMessage, closeConnection } from './api';
 import Messages from './messages/Messages'
-
+import Context from './context';
+import Modal from './Modal/Modal';
+import MIDISounds from 'midi-sounds-react';
 
 function App() {
 
@@ -34,7 +36,18 @@ function App() {
     }
   },[messageForm ? messageForm.scrollHeight : "",toScroll])
 
+  const [midiSounds, setmidiSounds] = React.useState(null);
 
+  function playsound () {
+    console.log("plass");
+    if (midiSounds)
+    {
+      midiSounds.playChordNow(10, [90], 0.1);
+      setTimeout(() => {
+        midiSounds.playChordNow(10, [70], 0.1);
+    }, 130)
+  }
+}
   React.useEffect(()=>{
     const input = document.getElementById("InputMess");
     input.addEventListener("keyup", function(event) {
@@ -48,8 +61,9 @@ function App() {
     });
 
 
-  },[])
 
+  },[])
+  
   function AddMessage(m)
   {
      let m1 = listMessages;
@@ -68,7 +82,10 @@ function App() {
     
     subscribe("Maxim", (m)=> {
       AddMessage(m);
-      
+      const playSound = document.getElementById("btnplay");
+      console.log(playSound);
+      if (playSound)
+        playSound.click();
     })
     return () => closeConnection;
   }, []);
@@ -95,42 +112,48 @@ function App() {
       setattachment({});
     }
   }
-
+  const [ImageUrl, setImageUrl] = React.useState('#');
   return (
-    <div style={{marginLeft: '1rem'}}>
-      {/*loading && <Loader/>*/}
-      
-      <Messages messages = {listMessages}/>
-      {loading && <Loader/>}
-      <div style={{display : (ImageSrc === '#' ? 'none' : 'flex')}}>
-        
-        <img id="attachImg" src={ImageSrc} />
-        <button id = "closeAttach" onClick = {() => {setImageSrc('#'); setattachment({})}} >
-          &times;
-        </button>
-      </div>
-      <div className = "newMessage">
-      <input className="form-control" id = "InputMess" value = {message} 
-        onChange={(event) => {
-          setmessage(event.target.value);
-        }} 
-        placeholder="Введите сообщение"  />\
+    <Context.Provider value={{setImageUrl}}>
+      <div style={{marginLeft: '1rem'}}>
+        {/*loading && <Loader/>*/}
+        <Modal ImageUrl={ImageUrl}  />
+        <Messages messages = {listMessages}/>
+        {loading && <Loader/>}
+        <div style={{display : (ImageSrc === '#' ? 'none' : 'flex')}}>
+          
+          <img id="attachImg" src={ImageSrc} />
+          <button className = "closeAttach" onClick = {() => {setImageSrc('#'); setattachment({})}} >
+            &times;
+          </button>
+        </div>
+        <div className = "newMessage">
+        <input className="form-control" id = "InputMess" value = {message} 
+          onChange={(event) => {
+            setmessage(event.target.value);
+          }} 
+          placeholder="Введите сообщение"  />
 
-      <label className="btn btn-default btn-file" >
-      <span className="attach"></span>
-        <input type="file"  style={{display:'none'}} onChange = {(event)=>attachFile(event)} accept="image/gif, image/jpg, image/jpeg, image/png"  />
-      </label>  
-      <button id = "BtnSend" className="btn btn-success" style = {{ marginLeft : '.5rem', height: '40px'}} disabled={!message.trim().length && ImageSrc === '#'} onClick={()=> {
-        SendMessage({message, sender : 'other', attachFile : attachment});
-        AddMessage({message, sender : 'me', attachFile : attachment});
-        setmessage("");
-        setImageSrc('#'); 
-        setattachment({});
-      }}>
-        Отправить
-      </button>
+        <label className="btn btn-default btn-file" >
+        <span className="attach"></span>
+          <input type="file"  style={{display:'none'}} onChange = {(event)=>attachFile(event)} accept="image/gif, image/jpg, image/jpeg, image/png"  />
+        </label>  
+        <button id = "BtnSend" className="btn btn-success" style = {{ marginLeft : '.5rem', height: '40px'}} disabled={!message.trim().length && ImageSrc === '#'} onClick={()=> {
+          SendMessage({message, sender : 'other', attachFile : attachment});
+          AddMessage({message, sender : 'me', attachFile : attachment});
+          setmessage("");
+          setImageSrc('#'); 
+          setattachment({});
+        }}>
+          Отправить
+        </button>
+        </div>
       </div>
-    </div>
+      <div style = {{display : 'none'}}>
+      <p><button id="btnplay" onClick={(e) => playsound(e)}>Play</button></p>
+      <MIDISounds ref={(ref) => setmidiSounds(ref)} appElementName="root" instruments={[1]}  />
+      </div>
+    </Context.Provider>
   );
 }
 
