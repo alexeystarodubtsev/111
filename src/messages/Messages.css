@@ -25,6 +25,7 @@
     padding: .5rem;
     margin-top: .5rem;
     display: inline-flex;
+    /* min-width: 80px; */
     
 }
 .message-text {
@@ -32,6 +33,13 @@
     word-break: break-word;
     
 }
+.time {
+  font-size: xx-small;
+  margin-right: 0em;
+  color: rgb(184, 176, 176);
+  text-align: right;
+}
+
 .message-right {
     text-align: right;
     margin-left: auto;

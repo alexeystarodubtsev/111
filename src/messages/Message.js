@@ -27,6 +27,9 @@ export default ({message}) => {
                         <div className="message-text">
                             {message.message}
                         </div>
+                        <div className="time">
+                          {message.time}
+                        </div>
                     </div>
                 </div>
             </div>)

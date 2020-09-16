@@ -10,21 +10,11 @@ import MIDISounds from 'midi-sounds-react';
 
 function App() {
 
-  //const messageForm = document.getElementById("MessagesForm");
-  //console.log(messageForm);
-  //messageForm.addEventListener("resize", ()=> {});
-  
-  
-        
- // messageForm.scrollTop = messageForm.scrollHeight - messageForm.clientHeight;
-  //console.log(messageForm.scrollHeight, messageForm.scrollTop, messageForm.clientHeight);
-
 
   const [listMessages, setlistMessages] = React.useState([]);
   const [message, setmessage] = React.useState("");
   const messageForm = document.getElementById("MessagesForm");
   
-  const [toScroll, settoScroll] = React.useState(false);
   
   const[ImageSrc, setImageSrc] = React.useState('#');
 
@@ -34,7 +24,7 @@ function App() {
     if (messageForm)
     {   messageForm.scrollTop = messageForm.scrollHeight - messageForm.clientHeight;
     }
-  },[messageForm ? messageForm.scrollHeight : "",toScroll])
+  },[listMessages])
 
   const [midiSounds, setmidiSounds] = React.useState(null);
 
@@ -48,7 +38,37 @@ function App() {
     }, 130)
   }
 }
-  React.useEffect(()=>{
+  // React.useEffect(()=>{
+  //   const input = document.getElementById("InputMess");
+  //   input.addEventListener("keyup", function(event) {
+  //     // Number 13 is the "Enter" key on the keyboard
+  //     if (event.keyCode === 13) {
+  //       // Cancel the default action, if needed
+  //       event.preventDefault();
+  //       // Trigger the button element with a click
+  //       document.getElementById("BtnSend").click();
+  //     }
+  //   });
+
+  // },[])
+  
+  function AddMessage(m)
+  {
+      const time = new Date();
+      m = {...m, time : `${time.getHours()}:${time.getMinutes()}`};
+      setlistMessages((lm) => [...lm,m]); 
+  }
+
+  React.useEffect(() => {
+    
+    subscribe("Maxim", (m)=> {
+      AddMessage(m);
+      const playSound = document.getElementById("btnplay");
+      console.log(playSound);
+      if (playSound)
+        playSound.click();
+    });
+
     const input = document.getElementById("InputMess");
     input.addEventListener("keyup", function(event) {
       // Number 13 is the "Enter" key on the keyboard
@@ -60,33 +80,6 @@ function App() {
       }
     });
 
-
-
-  },[])
-  
-  function AddMessage(m)
-  {
-     let m1 = listMessages;
-     
-     m1.push(m);
-      setlistMessages(m1);  
-      settoScroll(!toScroll);
-      let message2 = document.getElementById("InputMess").value;
-      setmessage("..");
-      setmessage("");
-      setmessage(message2);
-
-  }
-
-  React.useEffect(() => {
-    
-    subscribe("Maxim", (m)=> {
-      AddMessage(m);
-      const playSound = document.getElementById("btnplay");
-      console.log(playSound);
-      if (playSound)
-        playSound.click();
-    })
     return () => closeConnection;
   }, []);
 
